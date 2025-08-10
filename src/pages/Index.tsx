@@ -18,6 +18,7 @@ import {
   Zap,
   User,
 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 export interface QuizQuestion {
   id: string;
@@ -229,8 +230,10 @@ const QuizApp: React.FC = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const competitorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pairingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const celebrationFiredRef = useRef(false);
 
   const selectTopic = (topic: QuizTopic) => {
+    celebrationFiredRef.current = false;
     const newCompetitor =
       competitors[Math.floor(Math.random() * competitors.length)];
     setQuizState((prev) => ({
@@ -339,6 +342,7 @@ const QuizApp: React.FC = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
     if (competitorTimerRef.current) clearTimeout(competitorTimerRef.current);
     if (pairingTimerRef.current) clearTimeout(pairingTimerRef.current);
+    celebrationFiredRef.current = false;
 
     setQuizState((prev) => ({
       ...prev,
@@ -497,6 +501,25 @@ const QuizApp: React.FC = () => {
     quizState.currentTopic,
     quizState.currentQuestionIndex,
   ]);
+  useEffect(() => {
+    if (!quizState.currentTopic) return;
+    const completed =
+      quizState.completedQuestions.length === quizState.currentTopic.questions.length;
+    if (completed && !celebrationFiredRef.current) {
+      celebrationFiredRef.current = true;
+      const playerWon = quizState.score > quizState.competitorScore;
+      if (playerWon) {
+        const end = Date.now() + 1200;
+        const colors = ["#22c55e", "#60a5fa", "#f59e0b", "#a78bfa"];
+        const frame = () => {
+          confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors });
+          confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors });
+          if (Date.now() < end) requestAnimationFrame(frame);
+        };
+        frame();
+      }
+    }
+  }, [quizState.currentTopic, quizState.completedQuestions.length, quizState.score, quizState.competitorScore]);
 
   const currentQuestion =
     quizState.currentTopic?.questions[quizState.currentQuestionIndex];
@@ -660,96 +683,63 @@ const QuizApp: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4 flex items-center justify-center">
         <Card className="w-full max-w-3xl bg-gradient-card border-0 shadow-elevation">
           <CardContent className="p-8 text-center">
-            <div className={playerWon ? "animate-enter" : "animate-slide-in-right"}>
-              <Trophy
-                className={`h-20 w-20 mx-auto mb-6 ${
-                  playerWon ? "text-quiz-streak" : "text-muted-foreground"
-                }`}
-              />
-              <h2 className="text-4xl font-bold mb-2">
-                {playerWon ? "Victory!" : "Defeat!"}
-              </h2>
-              <p className="text-xl text-muted-foreground mb-8">
-                {playerWon
-                  ? "You dominated the competition!"
-                  : "Better luck next time!"}
-              </p>
-
-              {/* Final Scores */}
-              <div className="grid grid-cols-2 gap-8 mb-8">
-                <div
-                  className={`rounded-xl p-6 ${
-                    playerWon ? "bg-gradient-success" : "bg-secondary"
-                  }`}
-                >
-                  <div
-                    className={`text-3xl font-bold ${
-                      playerWon ? "text-white" : "text-foreground"
-                    } mb-2`}
-                  >
-                    {quizState.score}
+            <div className={`relative ${playerWon ? "animate-enter" : "animate-slide-in-right shake-hard"}`}>
+              {playerWon && <div className="victory-rays animate-spin-slower"></div>}
+              <div className="relative z-10">
+                <div className={`${playerWon ? "winner-glow" : ""} mx-auto mb-6 inline-block`}>
+                  <Trophy
+                    className={`h-20 w-20 ${playerWon ? 'text-quiz-streak' : 'text-muted-foreground'}`}
+                  />
+                </div>
+                <h2 className="text-4xl font-bold mb-2">
+                  {playerWon ? 'Victory!' : 'Defeat!'}
+                </h2>
+                <p className="text-xl text-muted-foreground mb-8">
+                  {playerWon ? 'You dominated the competition!' : 'Better luck next time!'}
+                </p>
+                
+                {/* Final Scores */}
+                <div className="grid grid-cols-2 gap-8 mb-8">
+                  <div className={`rounded-xl p-6 ${playerWon ? 'bg-gradient-success' : 'bg-secondary'}`}>
+                    <div className={`text-3xl font-bold ${playerWon ? 'text-white' : 'text-foreground'} mb-2`}>{quizState.score}</div>
+                    <div className={`text-sm ${playerWon ? 'text-white/80' : 'text-muted-foreground'} mb-3`}>Your Score</div>
+                    <div className="flex items-center justify-center gap-2">
+                      <User className="h-4 w-4" />
+                      <span className="text-sm font-medium">You</span>
+                    </div>
                   </div>
-                  <div
-                    className={`text-sm ${
-                      playerWon ? "text-white/80" : "text-muted-foreground"
-                    } mb-3`}
-                  >
-                    Your Score
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span className="text-sm font-medium">You</span>
+                  <div className={`rounded-xl p-6 ${!playerWon ? 'bg-gradient-success' : 'bg-secondary'}`}>
+                    <div className={`text-3xl font-bold ${!playerWon ? 'text-white' : 'text-foreground'} mb-2`}>{quizState.competitorScore}</div>
+                    <div className={`text-sm ${!playerWon ? 'text-white/80' : 'text-muted-foreground'} mb-3`}>Opponent Score</div>
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-lg">{quizState.competitor.nationality.split(' ')[0]}</span>
+                      <span className="text-sm font-medium">{quizState.competitor.name}</span>
+                    </div>
                   </div>
                 </div>
-                <div
-                  className={`rounded-xl p-6 ${
-                    !playerWon ? "bg-gradient-success" : "bg-secondary"
-                  }`}
-                >
-                  <div
-                    className={`text-3xl font-bold ${
-                      !playerWon ? "text-white" : "text-foreground"
-                    } mb-2`}
-                  >
-                    {quizState.competitorScore}
-                  </div>
-                  <div
-                    className={`text-sm ${
-                      !playerWon ? "text-white/80" : "text-muted-foreground"
-                    } mb-3`}
-                  >
-                    Opponent Score
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="text-lg">
-                      {quizState.competitor.nationality.split(" ")[0]}
-                    </span>
-                    <span className="text-sm font-medium">
-                      {quizState.competitor.name}
-                    </span>
-                  </div>
+
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  <Flame className="h-6 w-6 text-quiz-streak" />
+                  <span className="text-xl font-semibold">Streak: {quizState.streak} days</span>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <Flame className="h-6 w-6 text-quiz-streak" />
-                <span className="text-xl font-semibold">
-                  Streak: {quizState.streak} days
-                </span>
-              </div>
-
-              <div className="flex gap-4 justify-center">
-                <Button onClick={resetQuiz} variant="outline" size="lg">
-                  <RotateCcw className="h-5 w-5 mr-2" />
-                  New Challenge
-                </Button>
-                <Button
-                  onClick={() => selectTopic(quizState.currentTopic!)}
-                  size="lg"
-                  className="bg-gradient-primary border-0"
-                >
-                  Rematch
-                </Button>
+                <div className="flex gap-4 justify-center">
+                  <Button 
+                    onClick={resetQuiz}
+                    variant="outline"
+                    size="lg"
+                  >
+                    <RotateCcw className="h-5 w-5 mr-2" />
+                    New Challenge
+                  </Button>
+                  <Button 
+                    onClick={() => selectTopic(quizState.currentTopic!)}
+                    size="lg"
+                    className="bg-gradient-primary border-0"
+                  >
+                    Rematch
+                  </Button>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -809,25 +799,38 @@ const QuizApp: React.FC = () => {
 
           {/* Timer */}
           <div className="text-center mb-4">
-            <div
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-full ${
-                quizState.timeLeft <= 3
-                  ? "bg-destructive text-destructive-foreground animate-pulse"
-                  : "bg-primary text-primary-foreground"
-              }`}
-            >
-              <Clock className="h-5 w-5" />
-              <span className="text-xl font-bold">
-                {Math.max(0, quizState.timeLeft)}s
-              </span>
-            </div>
-            {quizState.competitorAnswerTime && (
-              <div className="mt-2 text-sm text-muted-foreground">
-                {quizState.competitor.name} answered in
-                {" "}
-                {quizState.competitorAnswerTime.toFixed(1)}s
+            <div className="flex flex-col items-center">
+              <div className={`relative inline-flex items-center justify-center ${quizState.timeLeft <= 3 ? 'timer-critical' : ''}`}>
+                <svg width="80" height="80" viewBox="0 0 80 80" className="rotate-[-90deg]">
+                  <circle cx="40" cy="40" r="28" stroke="hsl(var(--muted-foreground) / 0.25)" strokeWidth="8" fill="none" />
+                  <circle
+                    cx="40"
+                    cy="40"
+                    r="28"
+                    stroke={quizState.timeLeft <= 3 ? 'hsl(var(--destructive))' : 'hsl(var(--primary-glow))'}
+                    strokeWidth="8"
+                    fill="none"
+                    strokeLinecap="round"
+                    style={{
+                      strokeDasharray: `${2 * Math.PI * 28}`,
+                      strokeDashoffset: `${(2 * Math.PI * 28) * (1 - Math.max(0, quizState.timeLeft) / 10)}`,
+                      transition: 'stroke-dashoffset 0.5s ease, stroke 0.3s ease'
+                    }}
+                  />
+                </svg>
+                <div className="absolute text-center">
+                  <div className={`flex items-center justify-center gap-1 ${quizState.timeLeft <= 3 ? 'text-destructive' : 'text-primary'}`}>
+                    <Clock className="h-4 w-4" />
+                    <span className="text-xl font-bold">{Math.max(0, quizState.timeLeft)}s</span>
+                  </div>
+                </div>
               </div>
-            )}
+              {quizState.competitorAnswerTime && (
+                <div className="mt-2 text-sm text-muted-foreground">
+                  {quizState.competitor.name} answered in {quizState.competitorAnswerTime.toFixed(1)}s
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Progress */}

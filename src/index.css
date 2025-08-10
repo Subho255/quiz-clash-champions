@@ -166,4 +166,42 @@ All colors MUST be HSL.
     100% { opacity: 1; transform: scale(1); }
   }
   .animate-bounce-in { animation: bounce-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+  /* New: Victory/Defeat and Timer animations */
+  @keyframes spin-slower { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+  .animate-spin-slower { animation: spin-slower 8s linear infinite; }
+
+  .victory-rays {
+    position: absolute;
+    inset: -28px;
+    border-radius: 9999px;
+    background: conic-gradient(from 0deg, hsl(var(--success) / 0.35), transparent 25%, hsl(var(--success) / 0.35) 50%, transparent 75%, hsl(var(--success) / 0.35));
+    -webkit-mask: radial-gradient(circle, transparent 0 62%, #000 64% 100%);
+    mask: radial-gradient(circle, transparent 0 62%, #000 64% 100%);
+    filter: blur(1px);
+    pointer-events: none;
+  }
+
+  @keyframes winner-glow {
+    0% { box-shadow: 0 0 0 0 hsl(var(--success) / 0.5); }
+    50% { box-shadow: 0 0 40px 6px hsl(var(--success) / 0.35); }
+    100% { box-shadow: 0 0 0 0 hsl(var(--success) / 0.5); }
+  }
+  .winner-glow { border-radius: 9999px; padding: 0.25rem; animation: winner-glow 1.8s ease-in-out infinite; }
+
+  @keyframes shake { 
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .shake-hard { animation: shake 700ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+
+  @keyframes timer-flash {
+    0% { box-shadow: 0 0 0 0 hsl(var(--destructive) / 0.5); transform: scale(1); }
+    100% { box-shadow: 0 0 32px 10px hsl(var(--destructive) / 0.35); transform: scale(1.05); }
+  }
+  .timer-critical { animation: timer-flash 0.6s ease-in-out infinite alternate; border-radius: 9999px; }
 }
+
