@@ -767,34 +767,151 @@ const QuizApp: React.FC = () => {
             </div>
           </div>
 
-          {/* Competitor Scoreboard */}
-          <div className="grid grid-cols-2 gap-2 mb-4">
-            <Card className="bg-gradient-card border-0">
-              <CardContent className="p-3">
-                <div className="flex items-center gap-3 mb-1">
-                  <User className="h-5 w-5 text-primary" />
-                  <span className="font-semibold">You</span>
+          {/* Epic Scoreboard */}
+          <div className="grid grid-cols-2 gap-6 mb-6">
+            {/* Player Score */}
+            <div className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 ${
+              quizState.score > quizState.competitorScore 
+                ? 'bg-gradient-to-br from-emerald-500/20 via-green-400/10 to-emerald-600/20 ring-2 ring-emerald-400/30 shadow-2xl shadow-emerald-400/20 animate-pulse' 
+                : 'bg-gradient-to-br from-slate-800/40 via-slate-700/30 to-slate-900/40'
+            }`}>
+              {quizState.score > quizState.competitorScore && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-transparent to-emerald-400/10 animate-shimmer" />
+              )}
+              
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-xl ${
+                      quizState.score > quizState.competitorScore 
+                        ? 'bg-emerald-400/20 text-emerald-300' 
+                        : 'bg-primary/20 text-primary'
+                    }`}>
+                      <User className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-foreground">You</div>
+                      <div className="text-xs text-muted-foreground">Player</div>
+                    </div>
+                  </div>
+                  {quizState.score > quizState.competitorScore && (
+                    <div className="flex items-center gap-1 text-emerald-400">
+                      <Trophy className="h-4 w-4" />
+                      <span className="text-xs font-bold">LEADING</span>
+                    </div>
+                  )}
                 </div>
-                <div className="text-xl font-bold text-primary">
-                  {quizState.score}
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-gradient-card border-0">
-              <CardContent className="p-3">
-                <div className="flex items-center gap-3 mb-1">
-                  <span className="text-lg">
-                    {quizState.competitor.nationality.split(" ")[0]}
+                
+                <div className="flex items-baseline gap-2">
+                  <span className={`text-4xl font-black tracking-tight transition-colors duration-300 ${
+                    quizState.score > quizState.competitorScore 
+                      ? 'text-emerald-300 drop-shadow-lg' 
+                      : 'text-primary'
+                  }`}>
+                    {quizState.score.toLocaleString()}
                   </span>
-                  <span className="font-semibold text-sm">
-                    {quizState.competitor.name}
+                  <span className="text-xs text-muted-foreground font-medium">PTS</span>
+                </div>
+                
+                {quizState.score > 0 && (
+                  <div className="mt-3 flex items-center gap-2">
+                    <div className={`h-1 flex-1 rounded-full ${
+                      quizState.score > quizState.competitorScore 
+                        ? 'bg-emerald-400/30' 
+                        : 'bg-primary/30'
+                    }`}>
+                      <div 
+                        className={`h-full rounded-full transition-all duration-1000 ${
+                          quizState.score > quizState.competitorScore 
+                            ? 'bg-gradient-to-r from-emerald-400 to-emerald-300' 
+                            : 'bg-gradient-to-r from-primary to-primary-glow'
+                        }`}
+                        style={{
+                          width: `${Math.min(100, (quizState.score / Math.max(quizState.score, quizState.competitorScore, 1)) * 100)}%`
+                        }}
+                      />
+                    </div>
+                    <Zap className={`h-3 w-3 ${
+                      quizState.score > quizState.competitorScore ? 'text-emerald-400' : 'text-primary'
+                    }`} />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Opponent Score */}
+            <div className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 ${
+              quizState.competitorScore > quizState.score 
+                ? 'bg-gradient-to-br from-rose-500/20 via-red-400/10 to-rose-600/20 ring-2 ring-rose-400/30 shadow-2xl shadow-rose-400/20 animate-pulse' 
+                : 'bg-gradient-to-br from-slate-800/40 via-slate-700/30 to-slate-900/40'
+            }`}>
+              {quizState.competitorScore > quizState.score && (
+                <div className="absolute inset-0 bg-gradient-to-r from-rose-400/10 via-transparent to-rose-400/10 animate-shimmer" />
+              )}
+              
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-xl text-2xl ${
+                      quizState.competitorScore > quizState.score 
+                        ? 'bg-rose-400/20' 
+                        : 'bg-secondary/50'
+                    }`}>
+                      {quizState.competitor.nationality.split(" ")[0]}
+                    </div>
+                    <div>
+                      <div className="font-bold text-foreground text-sm leading-tight">
+                        {quizState.competitor.name}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {quizState.competitor.nationality.split(" ")[1]}
+                      </div>
+                    </div>
+                  </div>
+                  {quizState.competitorScore > quizState.score && (
+                    <div className="flex items-center gap-1 text-rose-400">
+                      <Trophy className="h-4 w-4" />
+                      <span className="text-xs font-bold">LEADING</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex items-baseline gap-2">
+                  <span className={`text-4xl font-black tracking-tight transition-colors duration-300 ${
+                    quizState.competitorScore > quizState.score 
+                      ? 'text-rose-300 drop-shadow-lg' 
+                      : 'text-destructive'
+                  }`}>
+                    {quizState.competitorScore.toLocaleString()}
                   </span>
+                  <span className="text-xs text-muted-foreground font-medium">PTS</span>
                 </div>
-                <div className="text-xl font-bold text-destructive">
-                  {quizState.competitorScore}
-                </div>
-              </CardContent>
-            </Card>
+                
+                {quizState.competitorScore > 0 && (
+                  <div className="mt-3 flex items-center gap-2">
+                    <div className={`h-1 flex-1 rounded-full ${
+                      quizState.competitorScore > quizState.score 
+                        ? 'bg-rose-400/30' 
+                        : 'bg-destructive/30'
+                    }`}>
+                      <div 
+                        className={`h-full rounded-full transition-all duration-1000 ${
+                          quizState.competitorScore > quizState.score 
+                            ? 'bg-gradient-to-r from-rose-400 to-rose-300' 
+                            : 'bg-gradient-to-r from-destructive to-red-400'
+                        }`}
+                        style={{
+                          width: `${Math.min(100, (quizState.competitorScore / Math.max(quizState.score, quizState.competitorScore, 1)) * 100)}%`
+                        }}
+                      />
+                    </div>
+                    <Zap className={`h-3 w-3 ${
+                      quizState.competitorScore > quizState.score ? 'text-rose-400' : 'text-destructive'
+                    }`} />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Timer */}
