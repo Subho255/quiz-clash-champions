@@ -17,6 +17,11 @@ import {
   Clock,
   Zap,
   User,
+  Crown,
+  Frown,
+  List,
+  Medal,
+  Star,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -205,7 +210,18 @@ interface QuizState {
   competitorAnswer: number | null;
   showPairing: boolean;
   quizStarted: boolean;
+  showLeaderboard: boolean;
 }
+
+// Leaderboard data
+const getLeaderboardData = (currentScore: number) => [
+  { name: "Sarah Chen", score: Math.max(currentScore + 50, 2450), country: "🇸🇬", rank: 1 },
+  { name: "Alex Rodriguez", score: Math.max(currentScore + 20, 2380), country: "🇲🇽", rank: 2 },
+  { name: "Yuki Tanaka", score: Math.max(currentScore + 10, 2350), country: "🇯🇵", rank: 3 },
+  { name: "You", score: currentScore, country: "🏳️", rank: currentScore > 2450 ? 1 : currentScore > 2380 ? 2 : currentScore > 2350 ? 3 : 4 },
+  { name: "Emma Wilson", score: Math.max(currentScore - 100, 2200), country: "🇬🇧", rank: 5 },
+  { name: "Lucas Silva", score: Math.max(currentScore - 150, 2100), country: "🇧🇷", rank: 6 },
+];
 
 const QuizApp: React.FC = () => {
   const [quizState, setQuizState] = useState<QuizState>({
@@ -225,6 +241,7 @@ const QuizApp: React.FC = () => {
     competitorAnswer: null,
     showPairing: false,
     quizStarted: false,
+    showLeaderboard: false,
   });
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -528,6 +545,119 @@ const QuizApp: React.FC = () => {
     quizState.completedQuestions.length ===
       quizState.currentTopic.questions.length;
 
+  // Leaderboard Screen
+  if (quizState.showLeaderboard) {
+    const leaderboardData = getLeaderboardData(quizState.score);
+    const sortedLeaderboard = leaderboardData.sort((a, b) => b.score - a.score);
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4">
+        <div className="max-w-4xl mx-auto pt-8">
+          <div className="flex items-center justify-between mb-8">
+            <Button variant="ghost" onClick={() => setQuizState(prev => ({ ...prev, showLeaderboard: false }))}>
+              ← Back
+            </Button>
+            <div className="flex items-center gap-3">
+              <Trophy className="h-8 w-8 text-yellow-400" />
+              <h1 className="text-4xl font-bold">Global Leaderboard</h1>
+            </div>
+            <div></div>
+          </div>
+
+          <Card className="bg-gradient-card border-0 shadow-card">
+            <CardContent className="p-8">
+              <div className="space-y-4">
+                {sortedLeaderboard.map((player, index) => {
+                  const actualRank = index + 1;
+                  const isCurrentUser = player.name === "You";
+                  
+                  return (
+                    <div
+                      key={`${player.name}-${index}`}
+                      className={`flex items-center gap-6 p-6 rounded-xl transition-all duration-300 ${
+                        isCurrentUser 
+                          ? 'bg-gradient-to-r from-emerald-500/20 to-green-400/20 ring-2 ring-emerald-400/30 shadow-lg' 
+                          : 'bg-secondary/50 hover:bg-secondary/80'
+                      }`}
+                    >
+                      {/* Rank */}
+                      <div className={`flex items-center justify-center w-16 h-16 rounded-full text-2xl font-black ${
+                        actualRank === 1 ? 'bg-yellow-400/20 text-yellow-400' :
+                        actualRank === 2 ? 'bg-slate-400/20 text-slate-400' :
+                        actualRank === 3 ? 'bg-amber-600/20 text-amber-600' :
+                        'bg-primary/20 text-primary'
+                      }`}>
+                        {actualRank === 1 ? (
+                          <Crown className="h-8 w-8" />
+                        ) : actualRank === 2 ? (
+                          <Medal className="h-8 w-8" />
+                        ) : actualRank === 3 ? (
+                          <Star className="h-8 w-8" />
+                        ) : (
+                          actualRank
+                        )}
+                      </div>
+
+                      {/* Player Info */}
+                      <div className="flex items-center gap-4 flex-1">
+                        <div className="text-3xl">{player.country}</div>
+                        <div>
+                          <div className={`text-xl font-bold ${isCurrentUser ? 'text-emerald-100' : 'text-foreground'}`}>
+                            {player.name}
+                          </div>
+                          <div className={`text-sm ${isCurrentUser ? 'text-emerald-200' : 'text-muted-foreground'}`}>
+                            Quiz Champion
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Score */}
+                      <div className="text-right">
+                        <div className={`text-3xl font-black ${
+                          actualRank === 1 ? 'text-yellow-400' :
+                          actualRank === 2 ? 'text-slate-400' :
+                          actualRank === 3 ? 'text-amber-600' :
+                          isCurrentUser ? 'text-emerald-300' :
+                          'text-primary'
+                        }`}>
+                          {player.score.toLocaleString()}
+                        </div>
+                        <div className={`text-sm ${isCurrentUser ? 'text-emerald-200' : 'text-muted-foreground'}`}>
+                          points
+                        </div>
+                      </div>
+
+                      {/* Special Effects */}
+                      {actualRank <= 3 && (
+                        <div className="flex items-center">
+                          <Zap className={`h-6 w-6 ${
+                            actualRank === 1 ? 'text-yellow-400' :
+                            actualRank === 2 ? 'text-slate-400' :
+                            'text-amber-600'
+                          }`} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 text-center">
+                <Button
+                  onClick={() => setQuizState(prev => ({ ...prev, showLeaderboard: false }))}
+                  size="lg"
+                  className="bg-gradient-primary border-0"
+                >
+                  Start Playing to Climb!
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   // Topic Selection Screen
   if (!quizState.currentTopic) {
     return (
@@ -543,7 +673,7 @@ const QuizApp: React.FC = () => {
             </p>
 
             {/* Main CTA */}
-            <div className="mb-12">
+            <div className="mb-12 flex gap-4 justify-center">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-primary to-primary-glow text-white px-12 py-6 text-xl font-semibold rounded-full shadow-glow hover:shadow-elevation transform hover:scale-105 transition-all duration-300 border-0"
@@ -555,6 +685,15 @@ const QuizApp: React.FC = () => {
               >
                 <Brain className="h-6 w-6 mr-3" />
                 Start Your Quiz Journey
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-12 py-6 text-xl font-semibold rounded-full transform hover:scale-105 transition-all duration-300"
+                onClick={() => setQuizState(prev => ({ ...prev, showLeaderboard: true }))}
+              >
+                <Trophy className="h-6 w-6 mr-3" />
+                View Leaderboard
               </Button>
             </div>
 
@@ -687,9 +826,11 @@ const QuizApp: React.FC = () => {
               {playerWon && <div className="victory-rays animate-spin-slower"></div>}
               <div className="relative z-10">
                 <div className={`${playerWon ? "winner-glow" : ""} mx-auto mb-6 inline-block`}>
-                  <Trophy
-                    className={`h-20 w-20 ${playerWon ? 'text-quiz-streak' : 'text-muted-foreground'}`}
-                  />
+                  {playerWon ? (
+                    <Crown className="h-20 w-20 text-yellow-400" />
+                  ) : (
+                    <Frown className="h-20 w-20 text-muted-foreground" />
+                  )}
                 </div>
                 <h2 className="text-4xl font-bold mb-2">
                   {playerWon ? 'Victory!' : 'Defeat!'}
@@ -731,6 +872,14 @@ const QuizApp: React.FC = () => {
                   >
                     <RotateCcw className="h-5 w-5 mr-2" />
                     New Challenge
+                  </Button>
+                  <Button 
+                    onClick={() => setQuizState(prev => ({ ...prev, showLeaderboard: true }))}
+                    variant="outline"
+                    size="lg"
+                  >
+                    <List className="h-5 w-5 mr-2" />
+                    Leaderboard
                   </Button>
                   <Button 
                     onClick={() => selectTopic(quizState.currentTopic!)}
@@ -854,11 +1003,11 @@ const QuizApp: React.FC = () => {
             {/* Opponent Score */}
             <div className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 ${
               quizState.competitorScore > quizState.score 
-                ? 'bg-gradient-to-br from-rose-500/20 via-red-400/10 to-rose-600/20 ring-2 ring-rose-400/30 shadow-2xl shadow-rose-400/20' 
+                ? 'bg-gradient-to-br from-emerald-500/20 via-green-400/10 to-emerald-600/20 ring-2 ring-emerald-400/30 shadow-2xl shadow-emerald-400/20' 
                 : 'bg-gradient-to-br from-slate-200/80 via-slate-100/60 to-slate-300/80 dark:from-slate-700/80 dark:via-slate-600/60 dark:to-slate-800/80'
             }`}>
               {quizState.competitorScore > quizState.score && (
-                <div className="absolute inset-0 bg-gradient-to-r from-rose-400/10 via-transparent to-rose-400/10 animate-shimmer" />
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-transparent to-emerald-400/10 animate-shimmer" />
               )}
               
               <div className="relative z-10">
@@ -866,22 +1015,28 @@ const QuizApp: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <div className={`p-2 rounded-xl text-2xl ${
                       quizState.competitorScore > quizState.score 
-                        ? 'bg-rose-400/20' 
+                        ? 'bg-emerald-400/20' 
                         : 'bg-secondary/50'
                     }`}>
                       {quizState.competitor.nationality.split(" ")[0]}
                     </div>
                     <div>
-                      <div className="font-bold text-foreground text-sm leading-tight">
+                      <div className={`font-bold text-foreground text-sm leading-tight ${
+                        quizState.competitorScore > quizState.score ? 'text-emerald-100' : ''
+                      }`}>
                         {quizState.competitor.name}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className={`text-xs ${
+                        quizState.competitorScore > quizState.score 
+                          ? 'text-emerald-200' 
+                          : 'text-muted-foreground'
+                      }`}>
                         {quizState.competitor.nationality.split(" ")[1]}
                       </div>
                     </div>
                   </div>
                   {quizState.competitorScore > quizState.score && (
-                    <div className="flex items-center gap-1 text-rose-400">
+                    <div className="flex items-center gap-1 text-emerald-300">
                       <Trophy className="h-4 w-4" />
                       <span className="text-xs font-bold">LEADING</span>
                     </div>
@@ -891,25 +1046,29 @@ const QuizApp: React.FC = () => {
                 <div className="flex items-baseline gap-2">
                   <span className={`text-4xl font-black tracking-tight transition-colors duration-300 ${
                     quizState.competitorScore > quizState.score 
-                      ? 'text-rose-300 drop-shadow-lg' 
+                      ? 'text-emerald-100 drop-shadow-lg' 
                       : 'text-destructive'
                   }`}>
                     {quizState.competitorScore.toLocaleString()}
                   </span>
-                  <span className="text-xs text-muted-foreground font-medium">PTS</span>
+                  <span className={`text-xs font-medium ${
+                    quizState.competitorScore > quizState.score 
+                      ? 'text-emerald-200' 
+                      : 'text-slate-600 dark:text-slate-300'
+                  }`}>PTS</span>
                 </div>
                 
                 {quizState.competitorScore > 0 && (
                   <div className="mt-3 flex items-center gap-2">
                     <div className={`h-1 flex-1 rounded-full ${
                       quizState.competitorScore > quizState.score 
-                        ? 'bg-rose-400/30' 
+                        ? 'bg-emerald-400/30' 
                         : 'bg-destructive/30'
                     }`}>
                       <div 
                         className={`h-full rounded-full transition-all duration-1000 ${
                           quizState.competitorScore > quizState.score 
-                            ? 'bg-gradient-to-r from-rose-400 to-rose-300' 
+                            ? 'bg-gradient-to-r from-emerald-400 to-emerald-300' 
                             : 'bg-gradient-to-r from-destructive to-red-400'
                         }`}
                         style={{
@@ -918,7 +1077,7 @@ const QuizApp: React.FC = () => {
                       />
                     </div>
                     <Zap className={`h-3 w-3 ${
-                      quizState.competitorScore > quizState.score ? 'text-rose-400' : 'text-destructive'
+                      quizState.competitorScore > quizState.score ? 'text-emerald-400' : 'text-destructive'
                     }`} />
                   </div>
                 )}
