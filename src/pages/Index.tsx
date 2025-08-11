@@ -772,8 +772,8 @@ const QuizApp: React.FC = () => {
             {/* Player Score */}
             <div className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 ${
               quizState.score > quizState.competitorScore 
-                ? 'bg-gradient-to-br from-emerald-500/20 via-green-400/10 to-emerald-600/20 ring-2 ring-emerald-400/30 shadow-2xl shadow-emerald-400/20 animate-pulse' 
-                : 'bg-gradient-to-br from-slate-800/40 via-slate-700/30 to-slate-900/40'
+                ? 'bg-gradient-to-br from-emerald-500/20 via-green-400/10 to-emerald-600/20 ring-2 ring-emerald-400/30 shadow-2xl shadow-emerald-400/20' 
+                : 'bg-gradient-to-br from-slate-200/80 via-slate-100/60 to-slate-300/80 dark:from-slate-700/80 dark:via-slate-600/60 dark:to-slate-800/80'
             }`}>
               {quizState.score > quizState.competitorScore && (
                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 via-transparent to-emerald-400/10 animate-shimmer" />
@@ -785,13 +785,21 @@ const QuizApp: React.FC = () => {
                     <div className={`p-2 rounded-xl ${
                       quizState.score > quizState.competitorScore 
                         ? 'bg-emerald-400/20 text-emerald-300' 
-                        : 'bg-primary/20 text-primary'
+                        : 'bg-slate-700/80 text-slate-100 dark:bg-slate-300/80 dark:text-slate-900'
                     }`}>
                       <User className="h-5 w-5" />
                     </div>
                     <div>
-                      <div className="font-bold text-foreground">You</div>
-                      <div className="text-xs text-muted-foreground">Player</div>
+                      <div className={`font-bold ${
+                        quizState.score > quizState.competitorScore 
+                          ? 'text-foreground' 
+                          : 'text-slate-800 dark:text-slate-100'
+                      }`}>You</div>
+                      <div className={`text-xs ${
+                        quizState.score > quizState.competitorScore 
+                          ? 'text-muted-foreground' 
+                          : 'text-slate-600 dark:text-slate-300'
+                      }`}>Player</div>
                     </div>
                   </div>
                   {quizState.score > quizState.competitorScore && (
@@ -806,11 +814,15 @@ const QuizApp: React.FC = () => {
                   <span className={`text-4xl font-black tracking-tight transition-colors duration-300 ${
                     quizState.score > quizState.competitorScore 
                       ? 'text-emerald-300 drop-shadow-lg' 
-                      : 'text-primary'
+                      : 'text-slate-800 dark:text-slate-100'
                   }`}>
                     {quizState.score.toLocaleString()}
                   </span>
-                  <span className="text-xs text-muted-foreground font-medium">PTS</span>
+                  <span className={`text-xs font-medium ${
+                    quizState.score > quizState.competitorScore 
+                      ? 'text-muted-foreground' 
+                      : 'text-slate-600 dark:text-slate-300'
+                  }`}>PTS</span>
                 </div>
                 
                 {quizState.score > 0 && (
@@ -818,13 +830,13 @@ const QuizApp: React.FC = () => {
                     <div className={`h-1 flex-1 rounded-full ${
                       quizState.score > quizState.competitorScore 
                         ? 'bg-emerald-400/30' 
-                        : 'bg-primary/30'
+                        : 'bg-slate-400/40 dark:bg-slate-500/40'
                     }`}>
                       <div 
                         className={`h-full rounded-full transition-all duration-1000 ${
                           quizState.score > quizState.competitorScore 
                             ? 'bg-gradient-to-r from-emerald-400 to-emerald-300' 
-                            : 'bg-gradient-to-r from-primary to-primary-glow'
+                            : 'bg-gradient-to-r from-slate-600 to-slate-500 dark:from-slate-400 dark:to-slate-300'
                         }`}
                         style={{
                           width: `${Math.min(100, (quizState.score / Math.max(quizState.score, quizState.competitorScore, 1)) * 100)}%`
@@ -832,7 +844,7 @@ const QuizApp: React.FC = () => {
                       />
                     </div>
                     <Zap className={`h-3 w-3 ${
-                      quizState.score > quizState.competitorScore ? 'text-emerald-400' : 'text-primary'
+                      quizState.score > quizState.competitorScore ? 'text-emerald-400' : 'text-slate-600 dark:text-slate-400'
                     }`} />
                   </div>
                 )}
@@ -842,8 +854,8 @@ const QuizApp: React.FC = () => {
             {/* Opponent Score */}
             <div className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 ${
               quizState.competitorScore > quizState.score 
-                ? 'bg-gradient-to-br from-rose-500/20 via-red-400/10 to-rose-600/20 ring-2 ring-rose-400/30 shadow-2xl shadow-rose-400/20 animate-pulse' 
-                : 'bg-gradient-to-br from-slate-800/40 via-slate-700/30 to-slate-900/40'
+                ? 'bg-gradient-to-br from-rose-500/20 via-red-400/10 to-rose-600/20 ring-2 ring-rose-400/30 shadow-2xl shadow-rose-400/20' 
+                : 'bg-gradient-to-br from-slate-200/80 via-slate-100/60 to-slate-300/80 dark:from-slate-700/80 dark:via-slate-600/60 dark:to-slate-800/80'
             }`}>
               {quizState.competitorScore > quizState.score && (
                 <div className="absolute inset-0 bg-gradient-to-r from-rose-400/10 via-transparent to-rose-400/10 animate-shimmer" />
