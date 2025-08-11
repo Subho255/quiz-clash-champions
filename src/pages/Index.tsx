@@ -819,8 +819,7 @@ const QuizApp: React.FC = () => {
                   />
                 </svg>
                 <div className="absolute text-center">
-                  <div className={`flex items-center justify-center gap-1 ${quizState.timeLeft <= 3 ? 'text-destructive' : 'text-primary'}`}>
-                    <Clock className="h-4 w-4" />
+                  <div className={`flex items-center justify-center ${quizState.timeLeft <= 3 ? 'text-destructive' : 'text-primary'}`}>
                     <span className="text-xl font-bold">{Math.max(0, quizState.timeLeft)}s</span>
                   </div>
                 </div>
