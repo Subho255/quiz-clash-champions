@@ -535,6 +535,9 @@ interface QuizState {
   showPairing: boolean;
   quizStarted: boolean;
   showLeaderboard: boolean;
+  isMatching: boolean;
+  showNextQuestionLoader: boolean;
+  questionStartTime: number | null;
 }
 
 // Leaderboard data
@@ -566,6 +569,9 @@ const QuizApp: React.FC = () => {
     showPairing: false,
     quizStarted: false,
     showLeaderboard: false,
+    isMatching: false,
+    showNextQuestionLoader: false,
+    questionStartTime: null,
   });
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -575,8 +581,6 @@ const QuizApp: React.FC = () => {
 
   const selectTopic = (topic: QuizTopic) => {
     celebrationFiredRef.current = false;
-    const newCompetitor =
-      competitors[Math.floor(Math.random() * competitors.length)];
     setQuizState((prev) => ({
       ...prev,
       currentTopic: topic,
@@ -588,13 +592,37 @@ const QuizApp: React.FC = () => {
       showExplanation: false,
       timeLeft: 10,
       answerTime: null,
-      competitor: newCompetitor,
+      competitor: competitors[0], // Placeholder during matching
       competitorScore: 0,
       competitorAnswerTime: null,
       competitorAnswer: null,
-      showPairing: true,
+      showPairing: false,
       quizStarted: false,
+      isMatching: true,
+      showNextQuestionLoader: false,
+      questionStartTime: null,
     }));
+    
+    // Show matching animation first
+    setTimeout(() => {
+      const newCompetitor = competitors[Math.floor(Math.random() * competitors.length)];
+      setQuizState(prev => ({
+        ...prev,
+        competitor: newCompetitor,
+        isMatching: false,
+        showPairing: true,
+      }));
+      
+      // Then start quiz after pairing screen
+      setTimeout(() => {
+        setQuizState(prev => ({
+          ...prev,
+          quizStarted: true,
+          showPairing: false,
+          questionStartTime: Date.now(),
+        }));
+      }, 3000);
+    }, 2000);
   };
 
   const selectAnswer = (answerIndex: number) => {
@@ -613,10 +641,10 @@ const QuizApp: React.FC = () => {
     if (!isCorrect) return 0;
     if (timeToAnswer === null) return 0; // No answer given
 
-    // Score based on speed: 1000 points for instant answer, decreasing linearly
-    const baseScore = 1000;
-    const speedBonus = Math.max(0, baseScore - timeToAnswer * 100);
-    return Math.round(speedBonus);
+    // Max 20 points per question (200 total for 10 questions), based on speed
+    const baseScore = 20;
+    const speedMultiplier = Math.max(0, (10 - timeToAnswer) / 10); // 0 to 1 based on speed
+    return Math.round(baseScore * speedMultiplier);
   };
 
   const nextQuestion = () => {
@@ -641,42 +669,51 @@ const QuizApp: React.FC = () => {
     const newStreak = isCorrect ? quizState.streak + 1 : 0;
     localStorage.setItem("quizStreak", newStreak.toString());
 
-    if (
-      quizState.currentQuestionIndex <
-      quizState.currentTopic.questions.length - 1
-    ) {
-      setQuizState((prev) => ({
-        ...prev,
-        currentQuestionIndex: prev.currentQuestionIndex + 1,
-        selectedAnswer: null,
-        showResult: false,
-        score: newScore,
-        competitorScore: newCompetitorScore,
-        streak: newStreak,
-        completedQuestions: [
-          ...prev.completedQuestions,
-          prev.currentTopic!.questions[prev.currentQuestionIndex].id,
-        ],
-        showExplanation: false,
-        timeLeft: 10,
-        answerTime: null,
-        competitorAnswerTime: null,
-        competitorAnswer: null,
-        quizStarted: true,
-      }));
-    } else {
-      // Quiz completed
-      setQuizState((prev) => ({
-        ...prev,
-        score: newScore,
-        competitorScore: newCompetitorScore,
-        streak: newStreak,
-        completedQuestions: [
-          ...prev.completedQuestions,
-          prev.currentTopic!.questions[prev.currentQuestionIndex].id,
-        ],
-      }));
-    }
+    // Show loading animation first
+    setQuizState((prev) => ({
+      ...prev,
+      showNextQuestionLoader: true,
+      score: newScore,
+      competitorScore: newCompetitorScore,
+      streak: newStreak,
+    }));
+
+    // Then move to next question after delay
+    setTimeout(() => {
+      if (
+        quizState.currentQuestionIndex <
+        quizState.currentTopic.questions.length - 1
+      ) {
+        setQuizState((prev) => ({
+          ...prev,
+          currentQuestionIndex: prev.currentQuestionIndex + 1,
+          selectedAnswer: null,
+          showResult: false,
+          showNextQuestionLoader: false,
+          completedQuestions: [
+            ...prev.completedQuestions,
+            prev.currentTopic!.questions[prev.currentQuestionIndex].id,
+          ],
+          showExplanation: false,
+          timeLeft: 10,
+          answerTime: null,
+          competitorAnswerTime: null,
+          competitorAnswer: null,
+          quizStarted: true,
+          questionStartTime: Date.now(),
+        }));
+      } else {
+        // Quiz completed
+        setQuizState((prev) => ({
+          ...prev,
+          showNextQuestionLoader: false,
+          completedQuestions: [
+            ...prev.completedQuestions,
+            prev.currentTopic!.questions[prev.currentQuestionIndex].id,
+          ],
+        }));
+      }
+    }, 1500);
   };
 
   const resetQuiz = () => {
@@ -1021,22 +1058,6 @@ const QuizApp: React.FC = () => {
               </Button>
             </div>
 
-            {/* Streak Display */}
-            <div className="flex items-center justify-center gap-6 mb-8">
-              <div className="flex items-center gap-3 bg-gradient-card rounded-full px-8 py-4 shadow-card">
-                <Flame className="h-7 w-7 text-quiz-streak animate-pulse" />
-                <span className="text-3xl font-bold text-quiz-streak">
-                  {quizState.streak}
-                </span>
-                <span className="text-lg text-muted-foreground">day streak</span>
-              </div>
-              <div className="flex items-center gap-3 bg-gradient-card rounded-full px-8 py-4 shadow-card">
-                <Trophy className="h-7 w-7 text-primary" />
-                <span className="text-lg text-muted-foreground font-medium">
-                  Quiz Master
-                </span>
-              </div>
-            </div>
           </div>
 
           {/* Topic Grid */}
@@ -1088,8 +1109,8 @@ const QuizApp: React.FC = () => {
     );
   }
 
-  // Pairing Screen
-  if (quizState.showPairing && quizState.currentTopic) {
+  // Matching Animation Screen
+  if (quizState.isMatching && quizState.currentTopic) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4 flex items-center justify-center">
         <Card className="w-full max-w-2xl bg-gradient-card border-0 shadow-elevation">
@@ -1097,6 +1118,34 @@ const QuizApp: React.FC = () => {
             <div className="animate-pulse mb-8">
               <h2 className="text-3xl font-bold mb-4">Finding Your Opponent...</h2>
               <div className="w-16 h-1 bg-primary mx-auto rounded-full animate-pulse"></div>
+            </div>
+
+            <div className="flex justify-center items-center mb-8">
+              <div className="text-center p-6 bg-primary/10 rounded-xl">
+                <User className="h-16 w-16 mx-auto mb-4 text-primary" />
+                <h3 className="text-xl font-bold mb-2">You</h3>
+                <p className="text-muted-foreground">Ready to compete!</p>
+              </div>
+            </div>
+
+            <div className="text-lg text-muted-foreground animate-bounce">
+              Searching for opponents...
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Pairing Screen
+  if (quizState.showPairing && quizState.currentTopic) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4 flex items-center justify-center">
+        <Card className="w-full max-w-2xl bg-gradient-card border-0 shadow-elevation">
+          <CardContent className="p-8 text-center">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold mb-4">Opponent Found!</h2>
+              <div className="w-16 h-1 bg-primary mx-auto rounded-full"></div>
             </div>
 
             <div className="grid grid-cols-2 gap-8 mb-8">
@@ -1108,7 +1157,7 @@ const QuizApp: React.FC = () => {
               </div>
 
               {/* Competitor */}
-              <div className="text-center p-6 bg-destructive/10 rounded-xl">
+              <div className="text-center p-6 bg-destructive/10 rounded-xl animate-scale-in">
                 <div className="w-16 h-16 mx-auto mb-4 bg-destructive/20 rounded-full flex items-center justify-center">
                   <span className="text-2xl">
                     {quizState.competitor.nationality.split(" ")[0]}
@@ -1214,6 +1263,30 @@ const QuizApp: React.FC = () => {
                   </Button>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Loading Next Question Screen
+  if (quizState.showNextQuestionLoader) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4 flex items-center justify-center">
+        <Card className="w-full max-w-2xl bg-gradient-card border-0 shadow-elevation">
+          <CardContent className="p-8 text-center">
+            <div className="animate-pulse mb-8">
+              <h2 className="text-3xl font-bold mb-4">Loading Next Question...</h2>
+              <div className="w-16 h-1 bg-primary mx-auto rounded-full animate-pulse"></div>
+            </div>
+
+            <div className="flex justify-center items-center mb-8">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+            </div>
+
+            <div className="text-lg text-muted-foreground animate-bounce">
+              Preparing your next challenge...
             </div>
           </CardContent>
         </Card>
