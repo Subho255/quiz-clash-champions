@@ -713,7 +713,7 @@ const QuizApp: React.FC = () => {
           ],
         }));
       }
-    }, 1500);
+    }, 2000);
   };
 
   const resetQuiz = () => {
@@ -1025,35 +1025,35 @@ const QuizApp: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-16 pt-12">
-            <h1 className="text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">
+          <div className="text-center mb-8 md:mb-16 pt-6 md:pt-12">
+            <h1 className="text-3xl md:text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4 md:mb-6">
               Competitive Quiz Arena
             </h1>
-            <p className="text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-2xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed">
               Face off against competitors worldwide in real-time quiz battles!
             </p>
 
             {/* Main CTA */}
-            <div className="mb-12 flex gap-4 justify-center">
+            <div className="mb-8 md:mb-12 flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-primary to-primary-glow text-white px-12 py-6 text-xl font-semibold rounded-full shadow-glow hover:shadow-elevation transform hover:scale-105 transition-all duration-300 border-0"
+                className="bg-gradient-to-r from-primary to-primary-glow text-white px-6 md:px-12 py-4 md:py-6 text-lg md:text-xl font-semibold rounded-full shadow-glow hover:shadow-elevation transform hover:scale-105 transition-all duration-300 border-0"
                 onClick={() =>
                   document.getElementById("topics")?.scrollIntoView({
                     behavior: "smooth",
                   })
                 }
               >
-                <Brain className="h-6 w-6 mr-3" />
+                <Brain className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
                 Start Your Quiz Journey
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="px-12 py-6 text-xl font-semibold rounded-full transform hover:scale-105 transition-all duration-300"
+                className="px-6 md:px-12 py-4 md:py-6 text-lg md:text-xl font-semibold rounded-full transform hover:scale-105 transition-all duration-300"
                 onClick={() => setQuizState(prev => ({ ...prev, showLeaderboard: true }))}
               >
-                <Trophy className="h-6 w-6 mr-3" />
+                <Trophy className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
                 View Leaderboard
               </Button>
             </div>
@@ -1114,22 +1114,22 @@ const QuizApp: React.FC = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4 flex items-center justify-center">
         <Card className="w-full max-w-2xl bg-gradient-card border-0 shadow-elevation">
-          <CardContent className="p-8 text-center">
-            <div className="animate-pulse mb-8">
-              <h2 className="text-3xl font-bold mb-4">Finding Your Opponent...</h2>
-              <div className="w-16 h-1 bg-primary mx-auto rounded-full animate-pulse"></div>
-            </div>
+          <CardContent className="p-6 md:p-8 text-center">
+            <div className="mb-6 md:mb-8">
 
-            <div className="flex justify-center items-center mb-8">
-              <div className="text-center p-6 bg-primary/10 rounded-xl">
-                <User className="h-16 w-16 mx-auto mb-4 text-primary" />
-                <h3 className="text-xl font-bold mb-2">You</h3>
-                <p className="text-muted-foreground">Ready to compete!</p>
+            <div className="relative mb-6">
+              <div className="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-r from-primary to-primary-foreground flex items-center justify-center animate-pulse">
+                <Zap className="w-10 h-10 md:w-12 md:h-12 text-white animate-bounce" />
               </div>
+              <div className="absolute -top-2 -right-8 md:-right-12 w-6 h-6 md:w-8 md:h-8 bg-yellow-400 rounded-full animate-ping"></div>
             </div>
-
-            <div className="text-lg text-muted-foreground animate-bounce">
-              Searching for opponents...
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Finding Your Match</h2>
+            <p className="text-muted-foreground mb-4">Connecting with competitors worldwide...</p>
+            <div className="flex justify-center space-x-1">
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+              <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+            </div>
             </div>
           </CardContent>
         </Card>
@@ -1275,9 +1275,9 @@ const QuizApp: React.FC = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4 flex items-center justify-center">
         <Card className="w-full max-w-2xl bg-gradient-card border-0 shadow-elevation">
-          <CardContent className="p-8 text-center">
-            <div className="animate-pulse mb-8">
-              <h2 className="text-3xl font-bold mb-4">Loading Next Question...</h2>
+          <CardContent className="p-6 md:p-8 text-center">
+            <div className="animate-pulse mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Loading Next Question...</h2>
               <div className="w-16 h-1 bg-primary mx-auto rounded-full animate-pulse"></div>
             </div>
 
