@@ -3,27 +3,128 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import {
-  Brain,
-  Globe,
-  Microscope,
-  BookOpen,
-  Scale,
-  Trophy,
-  Flame,
-  CheckCircle2,
-  XCircle,
-  RotateCcw,
-  Clock,
-  Zap,
-  User,
-  Crown,
-  Frown,
-  List,
-  Medal,
-  Star,
-} from "lucide-react";
 import confetti from "canvas-confetti";
+
+// SVG Icons
+const BrainIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M9.5 2C8.46 2 7.5 2.53 6.93 3.4C6.62 3.14 6.22 3 5.8 3C4.81 3 4 3.81 4 4.8C4 5.22 4.14 5.62 4.4 5.93C3.53 6.5 3 7.46 3 8.5V16.5C3 18.43 4.57 20 6.5 20H9.5C11.43 20 13 18.43 13 16.5V8.5C13 6.57 11.43 5 9.5 5C8.46 5 7.5 5.53 6.93 6.4C6.62 6.14 6.22 6 5.8 6C5.36 6 4.96 6.14 4.65 6.4C4.08 5.53 3.12 5 2.08 5C2.08 3.57 3.15 2.5 4.58 2.5H9.5C11.43 2.5 13 4.07 13 6V8.5H15.5C17.43 8.5 19 10.07 19 12V16.5C19 18.43 17.43 20 15.5 20H12.5C10.57 20 9 18.43 9 16.5V14.5H6.5C4.57 14.5 3 12.93 3 11V8.5C3 6.57 4.57 5 6.5 5H9.5Z"/>
+  </svg>
+);
+
+const GlobeIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.77 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"/>
+  </svg>
+);
+
+const MicroscopeIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M9.5 2V4H11V13.85C11 14.72 11.44 15.54 12.18 16L14.18 17.45C14.6 17.78 15.16 17.95 15.74 17.95H18V20H5V18H8.26C7.68 17.95 7.12 17.78 6.7 17.45L4.7 16C3.96 15.54 3.52 14.72 3.52 13.85V4H4.5V2H9.5ZM18 16V14H16V16H18ZM18 12V10H16V12H18Z"/>
+  </svg>
+);
+
+const BookIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM17 7H7V9H17V7ZM17 11H7V13H17V11ZM17 15H7V17H17V15Z"/>
+  </svg>
+);
+
+const ScaleIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M7 8C7 6.9 6.1 6 5 6S3 6.9 3 8 3.9 10 5 10 7 9.1 7 8ZM5 2C3.9 2 3 2.9 3 4S3.9 6 5 6 7 5.1 7 4 6.1 2 5 2ZM19 14C20.1 14 21 13.1 21 12S20.1 10 19 10 17 10.9 17 12 17.9 14 19 14ZM5 16C3.9 16 3 16.9 3 18S3.9 20 5 20 7 19.1 7 18 6.1 16 5 16ZM12 2C10.9 2 10 2.9 10 4V6H14V4C14 2.9 13.1 2 12 2ZM12 8C13.1 8 14 8.9 14 10S13.1 12 12 12 10 11.1 10 10 10.9 8 12 8Z"/>
+  </svg>
+);
+
+const TrophyIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20.38C20.8 4 21.11 4.42 20.96 4.82L20.76 5.26C20.17 6.69 19 7.73 17.62 8.02C16.84 8.18 16.05 8.1 15.34 7.82C14.36 9.5 12.84 10.76 11 11.35V19H15C15.55 19 16 19.45 16 20S15.55 21 15 21H9C8.45 21 8 20.55 8 20S8.45 19 9 19H13V11.35C11.16 10.76 9.64 9.5 8.66 7.82C7.95 8.1 7.16 8.18 6.38 8.02C5 7.73 3.83 6.69 3.24 5.26L3.04 4.82C2.89 4.42 3.2 4 3.62 4H7Z"/>
+  </svg>
+);
+
+const FlameIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12.45 16.5C12.45 16.5 15 14.4 15 11.47C15 8.5 12.45 6.5 12.45 6.5S9.9 8.5 9.9 11.47C9.9 14.4 12.45 16.5 12.45 16.5ZM12.45 2C12.45 2 18 6.27 18 12.22C18 17.5 15.31 22 12.45 22S6.9 17.5 6.9 12.22C6.9 6.27 12.45 2 12.45 2Z"/>
+  </svg>
+);
+
+const CheckCircleIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"/>
+  </svg>
+);
+
+const XCircleIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 2C6.47 2 2 6.47 2 12S6.47 22 12 22 22 17.53 22 12 17.53 2 12 2ZM17 15.59L15.59 17L12 13.41L8.41 17L7 15.59L10.59 12L7 8.41L8.41 7L12 10.59L15.59 7L17 8.41L13.41 12L17 15.59Z"/>
+  </svg>
+);
+
+const RotateIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 4V1L8 5L12 9V6C15.31 6 18 8.69 18 12S15.31 18 12 18 6 15.31 6 12H4C4 16.42 7.58 20 12 20S20 16.42 20 12 16.42 4 12 4Z"/>
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2ZM13 17L11 15.5V7H13V14.5L15.5 16.5L13 17Z"/>
+  </svg>
+);
+
+const ZapIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/>
+  </svg>
+);
+
+const UserIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 12C14.21 12 16 10.21 16 8S14.21 4 12 4 8 5.79 8 8 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z"/>
+  </svg>
+);
+
+const CrownIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M5 16L3 5L7.5 7L12 2L16.5 7L21 5L19 16H5ZM5 19H19V21H5V19Z"/>
+  </svg>
+);
+
+const FrownIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2ZM8.5 8C9.33 8 10 8.67 10 9.5S9.33 11 8.5 11 7 10.33 7 9.5 7.67 8 8.5 8ZM16.5 17H7.5C7.22 17 7 16.78 7 16.5S7.5 14 12 14 17 16.22 17 16.5 16.78 17 16.5 17ZM15.5 11C14.67 11 14 10.33 14 9.5S14.67 8 15.5 8 17 8.67 17 9.5 16.33 11 15.5 11Z"/>
+  </svg>
+);
+
+const ListIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M3 13H5V11H3V13ZM3 17H5V15H3V17ZM3 9H5V7H3V9ZM7 13H21V11H7V13ZM7 17H21V15H7V17ZM7 7V9H21V7H7Z"/>
+  </svg>
+);
+
+const MedalIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 8C13.1 8 14 8.9 14 10S13.1 12 12 12 10 11.1 10 10 10.9 8 12 8ZM12 6C9.79 6 8 7.79 8 10S9.79 14 12 14 16 12.21 16 10 14.21 6 12 6ZM7.5 2L9 6L12 4L15 6L16.5 2L12 4L7.5 2ZM6 16L8 20L12 18L16 20L18 16L12 18L6 16Z"/>
+  </svg>
+);
+
+const StarIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+  </svg>
+);
+
+const LifelineIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20ZM9.5 8C8.67 8 8 8.67 8 9.5S8.67 11 9.5 11 11 10.33 11 9.5 10.33 8 9.5 8ZM14.5 8C13.67 8 13 8.67 13 9.5S13.67 11 14.5 11 16 10.33 16 9.5 15.33 8 14.5 8ZM8 15C8.55 15 9 14.55 9 14C9 13.45 8.55 13 8 13S7 13.45 7 14C7 14.55 7.45 15 8 15ZM16 15C16.55 15 17 14.55 17 14C17 13.45 16.55 13 16 13S15 13.45 15 14C15 14.55 15.45 15 16 15Z"/>
+  </svg>
+);
+
+const ShareIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+    <path d="M18 16.08C17.24 16.08 16.56 16.38 16.04 16.85L8.91 12.7C8.96 12.47 9 12.24 9 12S8.96 11.53 8.91 11.3L15.96 7.19C16.5 7.69 17.21 8 18 8C19.66 8 21 6.66 21 5S19.66 2 18 2 15 3.34 15 5C15 5.24 15.04 5.47 15.09 5.7L8.04 9.81C7.5 9.31 6.79 9 6 9C4.34 9 3 10.34 3 12S4.34 15 6 15C6.79 15 7.5 14.69 8.04 14.19L15.16 18.34C15.11 18.55 15.08 18.77 15.08 19C15.08 20.61 16.39 21.92 18 21.92S20.92 20.61 20.92 19C20.92 17.39 19.61 16.08 18 16.08Z"/>
+  </svg>
+);
 
 export interface QuizQuestion {
   id: string;
@@ -36,7 +137,7 @@ export interface QuizQuestion {
 export interface QuizTopic {
   id: string;
   name: string;
-  icon: typeof Brain;
+  icon: React.ComponentType;
   color: string;
   description: string;
   questions: QuizQuestion[];
@@ -47,7 +148,7 @@ const quizTopics: QuizTopic[] = [
   {
     id: "history",
     name: "History",
-    icon: Brain,
+    icon: BrainIcon,
     color: "from-amber-500 to-orange-600",
     description: "Test your knowledge of world history and historical events",
     questions: [
@@ -133,7 +234,7 @@ const quizTopics: QuizTopic[] = [
   {
     id: "geography",
     name: "Geography",
-    icon: Globe,
+    icon: GlobeIcon,
     color: "from-blue-500 to-cyan-600",
     description: "Explore world geography, countries, and landmarks",
     questions: [
@@ -214,7 +315,7 @@ const quizTopics: QuizTopic[] = [
   {
     id: "science",
     name: "Science & Tech",
-    icon: Microscope,
+    icon: MicroscopeIcon,
     color: "from-purple-500 to-indigo-600",
     description: "Challenge yourself with science and technology questions",
     questions: [
@@ -300,7 +401,7 @@ const quizTopics: QuizTopic[] = [
   {
     id: "english",
     name: "English",
-    icon: BookOpen,
+    icon: BookIcon,
     color: "from-green-500 to-emerald-600",
     description: "Test your English language and literature knowledge",
     questions: [
@@ -384,7 +485,7 @@ const quizTopics: QuizTopic[] = [
   {
     id: "polity",
     name: "Polity",
-    icon: Scale,
+    icon: ScaleIcon,
     color: "from-red-500 to-rose-600",
     description: "Learn about government, politics, and civic knowledge",
     questions: [
@@ -538,6 +639,11 @@ interface QuizState {
   isMatching: boolean;
   showNextQuestionLoader: boolean;
   questionStartTime: number | null;
+  consecutiveCorrect: number;
+  showCelebration: boolean;
+  lifelinesUsed: number;
+  usedLifeline: boolean;
+  showSharing: boolean;
 }
 
 // Leaderboard data
@@ -572,6 +678,11 @@ const QuizApp: React.FC = () => {
     isMatching: false,
     showNextQuestionLoader: false,
     questionStartTime: null,
+    consecutiveCorrect: 0,
+    showCelebration: false,
+    lifelinesUsed: 0,
+    usedLifeline: false,
+    showSharing: false,
   });
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -601,6 +712,11 @@ const QuizApp: React.FC = () => {
       isMatching: true,
       showNextQuestionLoader: false,
       questionStartTime: null,
+      consecutiveCorrect: 0,
+      showCelebration: false,
+      lifelinesUsed: 0,
+      usedLifeline: false,
+      showSharing: false,
     }));
     
     // Show matching animation first
@@ -667,7 +783,19 @@ const QuizApp: React.FC = () => {
     const newCompetitorScore = quizState.competitorScore + competitorScoreToAdd;
 
     const newStreak = isCorrect ? quizState.streak + 1 : 0;
+    const newConsecutiveCorrect = isCorrect ? quizState.consecutiveCorrect + 1 : 0;
     localStorage.setItem("quizStreak", newStreak.toString());
+
+    // Check for celebration
+    const shouldCelebrate = newConsecutiveCorrect === 3;
+    if (shouldCelebrate) {
+      confetti({
+        particleCount: 50,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#22c55e', '#10b981', '#059669']
+      });
+    }
 
     // Show loading animation first
     setQuizState((prev) => ({
@@ -676,6 +804,8 @@ const QuizApp: React.FC = () => {
       score: newScore,
       competitorScore: newCompetitorScore,
       streak: newStreak,
+      consecutiveCorrect: newConsecutiveCorrect,
+      showCelebration: shouldCelebrate,
     }));
 
     // Then move to next question after delay
@@ -701,6 +831,7 @@ const QuizApp: React.FC = () => {
           competitorAnswer: null,
           quizStarted: true,
           questionStartTime: Date.now(),
+          usedLifeline: false,
         }));
       } else {
         // Quiz completed
@@ -714,6 +845,54 @@ const QuizApp: React.FC = () => {
         }));
       }
     }, 2000);
+  };
+
+  const useLifeline = () => {
+    if (quizState.lifelinesUsed >= 2 || quizState.usedLifeline || !currentQuestion) return;
+    
+    const correctIndex = currentQuestion.correctAnswer;
+    const wrongIndexes = currentQuestion.options
+      .map((_, index) => index)
+      .filter(i => i !== correctIndex);
+    
+    // Remove 2 wrong answers randomly
+    const toRemove = wrongIndexes.sort(() => Math.random() - 0.5).slice(0, 2);
+    
+    setQuizState(prev => ({
+      ...prev,
+      lifelinesUsed: prev.lifelinesUsed + 1,
+      usedLifeline: true,
+      // Mark which options to hide
+      hiddenOptions: toRemove,
+    }));
+  };
+
+  const shareScore = async () => {
+    const shareText = `I just scored ${quizState.score} points in the Competitive Quiz Arena! Can you beat my score? 🧠🏆`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Quiz Arena Score',
+          text: shareText,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Share cancelled');
+      }
+    } else {
+      // Fallback to clipboard
+      try {
+        await navigator.clipboard.writeText(shareText + ' ' + window.location.href);
+        // Show toast or notification
+        setQuizState(prev => ({ ...prev, showSharing: true }));
+        setTimeout(() => {
+          setQuizState(prev => ({ ...prev, showSharing: false }));
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy to clipboard');
+      }
+    }
   };
 
   const resetQuiz = () => {
@@ -919,7 +1098,9 @@ const QuizApp: React.FC = () => {
               ← Back
             </Button>
             <div className="flex items-center gap-3">
-              <Trophy className="h-8 w-8 text-yellow-400" />
+              <div className="h-8 w-8 text-yellow-400">
+                <TrophyIcon />
+              </div>
               <h1 className="text-4xl font-bold">Global Leaderboard</h1>
             </div>
             <div></div>
@@ -949,11 +1130,11 @@ const QuizApp: React.FC = () => {
                         'bg-primary/20 text-primary'
                       }`}>
                         {actualRank === 1 ? (
-                          <Crown className="h-8 w-8" />
+                          <div className="h-8 w-8"><CrownIcon /></div>
                         ) : actualRank === 2 ? (
-                          <Medal className="h-8 w-8" />
+                          <div className="h-8 w-8"><MedalIcon /></div>
                         ) : actualRank === 3 ? (
-                          <Star className="h-8 w-8" />
+                          <div className="h-8 w-8"><StarIcon /></div>
                         ) : (
                           actualRank
                         )}
@@ -991,11 +1172,13 @@ const QuizApp: React.FC = () => {
                       {/* Special Effects */}
                       {actualRank <= 3 && (
                         <div className="flex items-center">
-                          <Zap className={`h-6 w-6 ${
+                          <div className={`h-6 w-6 ${
                             actualRank === 1 ? 'text-yellow-400' :
                             actualRank === 2 ? 'text-slate-400' :
                             'text-amber-600'
-                          }`} />
+                          }`}>
+                            <ZapIcon />
+                          </div>
                         </div>
                       )}
                     </div>
@@ -1044,7 +1227,9 @@ const QuizApp: React.FC = () => {
                   })
                 }
               >
-                <Brain className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
+                <div className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3">
+                  <BrainIcon />
+                </div>
                 Start Your Quiz Journey
               </Button>
               <Button
@@ -1053,7 +1238,9 @@ const QuizApp: React.FC = () => {
                 className="px-6 md:px-12 py-4 md:py-6 text-lg md:text-xl font-semibold rounded-full transform hover:scale-105 transition-all duration-300"
                 onClick={() => setQuizState(prev => ({ ...prev, showLeaderboard: true }))}
               >
-                <Trophy className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3" />
+                <div className="h-5 w-5 md:h-6 md:w-6 mr-2 md:mr-3">
+                  <TrophyIcon />
+                </div>
                 View Leaderboard
               </Button>
             </div>
@@ -1078,7 +1265,9 @@ const QuizApp: React.FC = () => {
                       <div
                         className={`w-20 h-20 rounded-2xl bg-gradient-to-r ${topic.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
                       >
-                        <IconComponent className="h-10 w-10 text-white" />
+                        <div className="h-10 w-10 text-white">
+                          <IconComponent />
+                        </div>
                       </div>
                       <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
                         {topic.name}
@@ -1119,7 +1308,9 @@ const QuizApp: React.FC = () => {
 
             <div className="relative mb-6">
               <div className="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-r from-primary to-primary-foreground flex items-center justify-center animate-pulse">
-                <Zap className="w-10 h-10 md:w-12 md:h-12 text-white animate-bounce" />
+                <div className="w-10 h-10 md:w-12 md:h-12 text-white animate-bounce">
+                  <ZapIcon />
+                </div>
               </div>
               <div className="absolute -top-2 -right-8 md:-right-12 w-6 h-6 md:w-8 md:h-8 bg-yellow-400 rounded-full animate-ping"></div>
             </div>
@@ -1151,7 +1342,9 @@ const QuizApp: React.FC = () => {
             <div className="grid grid-cols-2 gap-8 mb-8">
               {/* User */}
               <div className="text-center p-6 bg-primary/10 rounded-xl">
-                <User className="h-16 w-16 mx-auto mb-4 text-primary" />
+                <div className="h-16 w-16 mx-auto mb-4 text-primary">
+                  <UserIcon />
+                </div>
                 <h3 className="text-xl font-bold mb-2">You</h3>
                 <p className="text-muted-foreground">Ready to compete!</p>
               </div>
@@ -1200,9 +1393,13 @@ const QuizApp: React.FC = () => {
               <div className="relative z-10">
                 <div className={`${playerWon ? "winner-glow" : ""} mx-auto mb-6 inline-block`}>
                   {playerWon ? (
-                    <Crown className="h-20 w-20 text-yellow-400" />
+                    <div className="h-20 w-20 text-yellow-400">
+                      <CrownIcon />
+                    </div>
                   ) : (
-                    <Frown className="h-20 w-20 text-muted-foreground" />
+                    <div className="h-20 w-20 text-muted-foreground">
+                      <FrownIcon />
+                    </div>
                   )}
                 </div>
                 <h2 className="text-4xl font-bold mb-2">
@@ -1218,7 +1415,9 @@ const QuizApp: React.FC = () => {
                     <div className={`text-3xl font-bold ${playerWon ? 'text-white' : 'text-foreground'} mb-2`}>{quizState.score}</div>
                     <div className={`text-sm ${playerWon ? 'text-white/80' : 'text-muted-foreground'} mb-3`}>Your Score</div>
                     <div className="flex items-center justify-center gap-2">
-                      <User className="h-4 w-4" />
+                      <div className="h-4 w-4">
+                        <UserIcon />
+                      </div>
                       <span className="text-sm font-medium">You</span>
                     </div>
                   </div>
@@ -1233,17 +1432,21 @@ const QuizApp: React.FC = () => {
                 </div>
 
                 <div className="flex items-center justify-center gap-2 mb-6">
-                  <Flame className="h-6 w-6 text-quiz-streak" />
+                  <div className="h-6 w-6 text-quiz-streak">
+                    <FlameIcon />
+                  </div>
                   <span className="text-xl font-semibold">Streak: {quizState.streak} days</span>
                 </div>
 
-                <div className="flex gap-4 justify-center">
+                <div className="flex gap-4 justify-center flex-wrap">
                   <Button 
                     onClick={resetQuiz}
                     variant="outline"
                     size="lg"
                   >
-                    <RotateCcw className="h-5 w-5 mr-2" />
+                    <div className="h-5 w-5 mr-2">
+                      <RotateIcon />
+                    </div>
                     New Challenge
                   </Button>
                   <Button 
@@ -1251,8 +1454,20 @@ const QuizApp: React.FC = () => {
                     variant="outline"
                     size="lg"
                   >
-                    <List className="h-5 w-5 mr-2" />
+                    <div className="h-5 w-5 mr-2">
+                      <ListIcon />
+                    </div>
                     Leaderboard
+                  </Button>
+                  <Button 
+                    onClick={shareScore}
+                    variant="outline"
+                    size="lg"
+                  >
+                    <div className="h-5 w-5 mr-2">
+                      <ShareIcon />
+                    </div>
+                    Share Score
                   </Button>
                   <Button 
                     onClick={() => selectTopic(quizState.currentTopic!)}
@@ -1262,6 +1477,14 @@ const QuizApp: React.FC = () => {
                     Rematch
                   </Button>
                 </div>
+
+                {quizState.showSharing && (
+                  <div className="mt-4 p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                    <p className="text-sm text-green-800 dark:text-green-200">
+                      Score copied to clipboard! Share it with your friends! 🎉
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
@@ -1300,18 +1523,31 @@ const QuizApp: React.FC = () => {
       <div className="h-screen overflow-hidden bg-gradient-to-br from-background via-primary/5 to-primary-glow/20 p-4">
         <div className="max-w-4xl mx-auto h-full pt-4 flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <Button variant="ghost" onClick={resetQuiz} className="hover:bg-secondary">
-              ← Back to Arena
-            </Button>
+            <div className="flex items-center justify-between mb-4">
+              <Button variant="ghost" onClick={resetQuiz} className="hover:bg-secondary">
+                ← Back to Arena
+              </Button>
 
-            <div className="flex items-center gap-4">
-              <Badge variant="secondary">
-                Question {quizState.currentQuestionIndex + 1} / {" "}
-                {quizState.currentTopic.questions.length}
-              </Badge>
+              <div className="flex items-center gap-4">
+                <Badge variant="secondary">
+                  Question {quizState.currentQuestionIndex + 1} / {" "}
+                  {quizState.currentTopic.questions.length}
+                </Badge>
+                {quizState.lifelinesUsed < 2 && !quizState.usedLifeline && (
+                  <Button
+                    onClick={useLifeline}
+                    variant="outline"
+                    size="sm"
+                    className="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 border-yellow-300"
+                  >
+                    <div className="h-4 w-4 mr-1">
+                      <LifelineIcon />
+                    </div>
+                    50/50 ({2 - quizState.lifelinesUsed})
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
 
           {/* Epic Scoreboard */}
           <div className="grid grid-cols-2 gap-6 mb-6">
@@ -1333,7 +1569,9 @@ const QuizApp: React.FC = () => {
                         ? 'bg-emerald-400/20 text-emerald-300' 
                         : 'bg-slate-700/80 text-slate-100 dark:bg-slate-300/80 dark:text-slate-900'
                     }`}>
-                      <User className="h-5 w-5" />
+                      <div className="h-5 w-5">
+                        <UserIcon />
+                      </div>
                     </div>
                     <div>
                       <div className={`font-bold ${
@@ -1350,7 +1588,9 @@ const QuizApp: React.FC = () => {
                   </div>
                   {quizState.score > quizState.competitorScore && (
                     <div className="flex items-center gap-1 text-emerald-400">
-                      <Trophy className="h-4 w-4" />
+                      <div className="h-4 w-4">
+                        <TrophyIcon />
+                      </div>
                       <span className="text-xs font-bold">LEADING</span>
                     </div>
                   )}
@@ -1389,9 +1629,11 @@ const QuizApp: React.FC = () => {
                         }}
                       />
                     </div>
-                    <Zap className={`h-3 w-3 ${
+                    <div className={`h-3 w-3 ${
                       quizState.score > quizState.competitorScore ? 'text-emerald-400' : 'text-slate-600 dark:text-slate-400'
-                    }`} />
+                    }`}>
+                      <ZapIcon />
+                    </div>
                   </div>
                 )}
               </div>
@@ -1434,7 +1676,9 @@ const QuizApp: React.FC = () => {
                   </div>
                   {quizState.competitorScore > quizState.score && (
                     <div className="flex items-center gap-1 text-emerald-300">
-                      <Trophy className="h-4 w-4" />
+                      <div className="h-4 w-4">
+                        <TrophyIcon />
+                      </div>
                       <span className="text-xs font-bold">LEADING</span>
                     </div>
                   )}
@@ -1473,9 +1717,11 @@ const QuizApp: React.FC = () => {
                         }}
                       />
                     </div>
-                    <Zap className={`h-3 w-3 ${
+                    <div className={`h-3 w-3 ${
                       quizState.competitorScore > quizState.score ? 'text-emerald-400' : 'text-destructive'
-                    }`} />
+                    }`}>
+                      <ZapIcon />
+                    </div>
                   </div>
                 )}
               </div>
@@ -1537,6 +1783,10 @@ const QuizApp: React.FC = () => {
 
               <div className="grid gap-3">
                 {currentQuestion?.options.map((option, index) => {
+                  // Hide options if lifeline was used
+                  const isHidden = (quizState as any).hiddenOptions?.includes(index);
+                  if (isHidden) return null;
+
                   let buttonVariant: "outline" | "default" | "destructive" | "secondary" =
                     "outline";
                   let className =
@@ -1588,17 +1838,23 @@ const QuizApp: React.FC = () => {
                             )}
                           {quizState.showResult &&
                             index === currentQuestion.correctAnswer && (
-                              <CheckCircle2 className="h-5 w-5" />
+                              <div className="h-5 w-5">
+                                <CheckCircleIcon />
+                              </div>
                             )}
                           {quizState.showResult &&
                             index === quizState.selectedAnswer &&
                             index !== currentQuestion.correctAnswer && (
-                              <XCircle className="h-5 w-5" />
+                              <div className="h-5 w-5">
+                                <XCircleIcon />
+                              </div>
                             )}
                           {quizState.answerTime !== null &&
                             index === quizState.selectedAnswer && (
                               <div className="flex items-center gap-1">
-                                <Zap className="h-4 w-4 text-yellow-400" />
+                                <div className="h-4 w-4 text-yellow-400">
+                                  <ZapIcon />
+                                </div>
                                 <span className="text-xs">
                                   {quizState.answerTime.toFixed(1)}s
                                 </span>
@@ -1608,7 +1864,7 @@ const QuizApp: React.FC = () => {
                       </div>
                     </Button>
                   );
-                })}
+                }).filter(Boolean)}
               </div>
             </CardContent>
           </Card>
